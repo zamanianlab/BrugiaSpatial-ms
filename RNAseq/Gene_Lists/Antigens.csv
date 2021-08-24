@@ -1,0 +1,41 @@
+gene_id,gene_name,other_names,Moreno_Antigen,Maizels_Modulation,Vaccine,OrthoAntigen,DiagnosticAntigen,Ortholog?,Moreno_Ref,Modulation_Ref,Maizels_Rev_Ref,Vaccine_Ref,Norris_Rev_Ref,Diagnostic_Ref,Note
+WBGene00230930,Bma-cpi-2,CPI-2; Cystatin,1,1,1,,,,21041637,12704112,30462997,,,,Direct search in wormbase
+WBGene00220628,Bma-cpi-1,CPI-1; Cystatin; Bm367,,,1,,,,,,,24450869,,,
+WBGene00227131,Bma-mif-1,MIF-1,1,1,,,,,21041637,12221083,30462997,,,,Direct search in wormbase
+WBGene00224494,Bma-val-1,VAL-1; Venom allergen-like protein-1,1,,,,,,21041637,,,,,,Direct search in wormbase
+WBGene00234141,Bma-tpi-1,Triosephosphate isomerase,1,,1,,,,21041637,,,24586152,,,Direct search in wormbase
+WBGene00234156,Bma-tct-1,Translationally controlled tumor protein,1,,1,1,,B. pahangi tct-1 vaccine trial,21041637,,,,,,Direct search in wormbase
+WBGene00223778,Bma-nars-1.4,Asparaginyl-tRNA synthetase,,1,,,,,,23254300,30462997,,,,Closest hit from genbank ACC
+WBGene00222058,Bma-daf-7,Transforming growth factor b homolog; TGH-2,,1,,,,,,11035752,30462997,,,,
+WBGene00229198,Bma-alt-2,ALT-2,,1,1,,,,,15788098,30462997,17442307,23824365,,Confirmed from genbank ACC & BLAST
+WBGene00249804,Bma-alt-1.1,ALT-1,,1,1,1,,O. volvulus ALT-1 also used in vaccines,,15788098,30462997,10858234,23824365,,
+WBGene00223491,Bma-nas-14,BM-K1 (in paper),,1,,,,,,24891519,30462997,,,,Terminal end only identified in modulation
+WBGene00224505,Bma-nmy-1,Myosin heavy chain,,,1,,,,,,,18817835,23824365,,
+WBGene00223423,Bma-unc-15,Paramyosin,,,1,1,,O. volvulus paramyosin,,,,1775173,23824365,2527335,
+WBGene00228562,Bma-cht-1.1,Chitinase isoform a,,,1,,,,,,,9158061,23824365,,
+WBGene00228353,Bm8092 ,Collagenase NC10 and Endostatin family protein,,,1,,,,,,,16870314,23824365,,
+WBGene00228666,Bm8405,TGc domain-containing protein,,,1,,,,,,,19190232,23824365,,
+WBGene00234039,Bm13778,Superoxide Dismutase (SOD-3; SOD-2),,,1,,,,,,,9158061,23824365,,Not specified which SOD
+WBGene00233988,Bm13727,Superoxide Dismutase (SOD-1; SOD-5),,,1,,,,,,,9158061,23824365,,Not specified which SOD
+WBGene00231818,Bm11557,Superoxide Dismutase (SOD-4),,,1,,,,,,,9158061,23824365,,Not specified which SOD
+WBGene00225675,Bma-gst-1,Glutathione S-transferase,,,1,,,,,,,19513102,23824365,,Derived from Wucheraria transcript; Bm given
+WBGene00223487,Bma-prdx-2,Thioredoxin peroxidase,,,1,,,,,,,19190232,23824365,,Confirmed from genbank ACC & BLAST
+WBGene00222262,Bma-sxp-1,SXP-1; DUF148 domain-containing protein,,,1,,1,,,,,9158061,23824365,20430004,From W bancrofti GenBank ACC BLAST hit & Loa Loa Sxp1 closest orthologue
+WBGene00224891,Bma-pdi-3,Transglutaminase,,,1,,,,,,,19190232,23824365,,Confirmed from genbank ACC & BLAST
+WBGene00221961,Bma-rpl-4,BmSL3 antigen; RPL4 gene,,,1,,,,,,,16524413,23824365,,Cloest hit to genbank ACC: DQ002392
+WBGene00230077,Bm9816 ,Leucyl aminopeptidase ortholog of Acanthocheilonema viteae ES-62 (nAv.1.0.1.g08992),,1,,1,,A. viteaea ES-62 (AF077194),,10589978,,,,,From sequence on NCBI identified through original manuscript (Harnett 1999)
+WBGene00234226,Bma-enol-1.2,Enolase ortholog of Onchocerca volvulus a-enolase ,,1,,1,,O. volvulus Enolase,,12818429,,,,,
+WBGene00268837,Bm17695,Tropomyosin,,,1,1,,O. volvulus tropomyosin,,,,9636187,,,
+WBGene00223407,Bma-far-1,BM20; Fatty acid retinol binding protein 1 ortholog,,,1,1,,O. volvulus antigen MOv2 / far-1,,,,9223154,,,Uterine walls of AF
+WBGene00225841,Bma-aldo-1,Fructose-bisphosphate aldolase,,,1,1,,O. volvulus Fructose-bisphosphate aldolase,,,,11796620,,,Found in cuticle when separates during molt
+WBGene00226673,Bma-crt-1,Calreticulin,,,1,,,,,,,33667079,,,
+WBGene00222456,Bm2195,SHSP domain-containing protein; Heat shock protein 12.6,,1,,,,,,,,22496777,,,Included in tetravalent BmHAXT vaccine
+WBGene00226422,Bma-tni-4,Troponin 1; Bm6161 ,,,1,,,,,,,31055672,,,Not full vaccine trial
+WBGene00226345,Bma-npa-1,,,,,1,1,D. immitis nDi.2.2.2.g12332 OR nDi.2.2.2.g02001,,,,1518532,,,Difficult to identify; mixed results between BLAST and Wormbase searches
+WBGene00229678,Bm9417,Immunodominant antigen homologue; putative,,,,1,1,D. immitis Dg2,,,,7829848,,,
+WBGene00227595,Bma-lfi-1.1,Major antigen putative,,,,1,1,O. volvulus major myosin like antigen (OVOC11613),,,,2194123,,,
+WBGene00220358,Bm97,Bm97,,,1,1,1,D. immitis secreted antigen (nDi.2.2.2.g08197),,,,8992321 / 2809205,,,
+WBGene00223999,Bm3738,Bm3738,,,,1,1,O. volvulus Ov33-3 & D. immitis pepsin inhibitor precursor (DiT33; nDi.2.2.2.g10569) / ,,,,8728997,,,
+,,A2 fraction 120 KD protein,,,1,,,,,,,7494640,23824365,,Unidentified
+,,,,,1,1,,O. volvulus OVB-20,,,,8920006,,,Unidentified; L3 specific
+WBGene00229641,Bma-srp-2,Serpin,,1,,,,,,11046048,,,,,
