@@ -1094,12 +1094,12 @@ cor_tree <- cor.r %>%
   select(from = from_gene_id, to = to_gene_id, corr)
 
 # subset tree (glc)
-glc.phylo <- tree_subset(lgic.phylo, node = 163, levels_back = 0) 
+glc.phylo <- tree_subset(lgic.phylo, node = 161, levels_back = 0)  #163 originally
 glc.tibble <- as_tibble(glc.phylo) %>% 
   left_join(., d1, by = 'label') %>% 
   select(!contains('.y')) %>% 
   rename(node = node.x) %>% 
-  dplyr::slice(1:23) %>%
+  dplyr::slice(1:10) %>%
   mutate(newlab = str_remove(tiplab, "Bma-"))
 
 glc_cor <- cor_tree %>% 
@@ -1122,7 +1122,7 @@ glc.phylo@data$SH_aLRT <- 0.1
                   outward = FALSE,
                   alpha = 0.8) +
     geom_tiplab(aes(label = newlab),
-                size = 2.75,
+                size = 3,
                 align = TRUE,
                 linesize = 0,
                 linetype = 0,
