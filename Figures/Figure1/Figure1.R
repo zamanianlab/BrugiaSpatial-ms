@@ -7,7 +7,7 @@ library(DESeq2)
 library(hexbin)
 library(wesanderson)
 
-setwd("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure1")
+setwd("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure1")
 
 theme_zlab_white = function(base_size = 12, base_family = "Helvetica") {
   
@@ -62,10 +62,11 @@ theme_zlab_white = function(base_size = 12, base_family = "Helvetica") {
 
 library(magick)
 library(pdftools)
+#devtools::install_github("sjp/grConvert")
 library(grConvert)
 library(grImport2)
 
-illust.hb <- image_read_pdf("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/HeadBody/Illustration_HeadBody.pdf", density = 600)
+illust.hb <- image_read_pdf("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/HeadBody/Illustration_HeadBody.pdf", density = 600)
 Fig1a <- ggdraw() + 
   draw_image(illust.hb, scale = 1) 
 
@@ -78,7 +79,7 @@ Fig1a <- ggdraw() +
 ####### READ IN AND SAVE RAW/TPM counts (Head vs Tail)
 ########################################################
 
-RNAdata <- c("~/Box/ZamanianLab/SeqLibraries/Mapping/")
+RNAdata <- c("~/Library/CloudStorage/Box-Box/ZamanianLab/SeqLibraries/Mapping/")
 
 dir <- c("O001_BmAF_HT/190114_BCCV49ANXX/")
 counts_dir <- paste0(RNAdata,dir,"counts/")
@@ -263,6 +264,14 @@ res.df <- as.data.frame(res) %>%
   mutate(sig = ifelse((abs(log2FoldChange) > 1) & padj < 0.01, "yes", "no"))
 saveRDS(res.df, "deg/ht.res.rds")
 
+# integrate gene names
+Bma.id <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.Proteins.csv",
+                   header = FALSE, sep = ",") %>% 
+  dplyr::rename("protein_id" = V1, "gene_id" = V2, "gene_name" = V3) %>%
+  group_by(gene_id, gene_name) %>%
+  distinct(gene_id, .keep_all = TRUE)
+res.df <- left_join(res.df,Bma.id,by="gene_id")
+
 #Supplementary file 
 write.csv(res.df,"HeadBody_DEGs.csv", row.names = FALSE)
 
@@ -281,15 +290,15 @@ degs.head.list <- unique(degs.head$gene_id) #use in Figure4.R
 res.df <- readRDS("deg/ht.res.rds")
 
 # Prep proteome gene lists
-proteome1 <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Secretome_Proteins_Bennuru_All.csv",
+proteome1 <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Secretome_Proteins_Bennuru_All.csv",
                       header = TRUE, sep = ",") %>%
   select(gene_id,gene_name) 
 
-proteome2 <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Secretome_Proteins_Bennuru_AF.csv",
+proteome2 <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Secretome_Proteins_Bennuru_AF.csv",
                       header = TRUE, sep = ",") %>%
   select(gene_id,gene_name) 
 
-proteome3 <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Secretome_Proteins_Moreno_MF_AF_AM.csv",
+proteome3 <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Secretome_Proteins_Moreno_MF_AF_AM.csv",
                       header = TRUE, sep = ",") %>%
   select(gene_id,gene_name)
 
@@ -297,7 +306,7 @@ proteome <- rbind(proteome1,proteome2,proteome3) %>%
   distinct(gene_id,gene_name) %>% mutate(proteome = 1)
 
 # Prep antigen gene list
-antigens <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Antigens.csv",
+antigens <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Antigens.csv",
                       header = TRUE, sep = ",") %>%
   dplyr::slice(1:36) %>% select(1:8) %>% mutate(antigen = 1)
 
@@ -334,10 +343,11 @@ volcano.ht <- ggplot(data=res.df, aes(x=log2FoldChange, y=-log10(padj))) +
                    segment.alpha=0.4,segment.size=0.4, segment.color = "#6600CC",
                    nudge_y=0,nudge_x=0, colour ="black", max.iter = 100000, max.overlaps = 20 , force = 3, size=3) +
   annotate(geom="text", x=7, y= 70, label="Head-enriched",color="black", size = 4, hjust = 0) + 
-  annotate(geom="text", x=-10, y= 65, label="103",color="lightseagreen", size = 4, hjust = 0) + 
-  annotate(geom="text", x=8.5, y= 65, label="141",color="lightseagreen", size = 4, hjust = 0) + 
-  annotate(geom="text", x=-10, y= 62, label="4",color="#6600CC", size = 4, hjust = 0) + 
-  annotate(geom="text", x=8.5, y= 62, label="25",color="#6600CC", size = 4, hjust = 0) + 
+  annotate(geom="text", x=-10, y= 70, label="Body-enriched",color="black", size = 4, hjust = 0) + 
+  #annotate(geom="text", x=-10, y= 65, label="103",color="lightseagreen", size = 4, hjust = 0) + 
+  annotate(geom="text", x=8, y= 65, label="141 (of 244)",color="lightseagreen", size = 4, hjust = 0) + 
+  #annotate(geom="text", x=-10, y= 62, label="4",color="#6600CC", size = 4, hjust = 0) + 
+  annotate(geom="text", x=8, y= 62, label="25 (of 29)",color="#6600CC", size = 4, hjust = 0) + 
   ylim(0,70) + xlim(-11,11) +
   xlab(expression(log["2"]~'(Fold Change)')) + ylab(expression(-log["10"]~italic(P)))
 volcano.ht
@@ -348,12 +358,12 @@ volcano.ht
 ### Load Antigens, Proteome, Drug Targets and join into gene_list df
 ##########################################
 
-antigens <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Antigens.csv",
+antigens <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Antigens.csv",
                      header = TRUE, sep = ",") %>%
   dplyr::slice(1:36) %>% select(gene_id,gene_name,Vaccine) %>% mutate(antigen = 1)
 
 #current drug targets
-drug_targets <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Drug_Targets.csv",
+drug_targets <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Drug_Targets.csv",
                          header = TRUE, sep = ",") %>%
   filter(existing == "yes") %>%
   mutate(gene_name = ifelse(is.na(name),transcript_id,name)) %>%
@@ -363,6 +373,13 @@ gene_list <- full_join(antigens,drug_targets,by = "gene_id") %>%
   mutate(gene_name = ifelse(is.na(gene_name.x),gene_name.y,gene_name.x)) %>%
   select(-`gene_name.x`,-`gene_name.y`) %>%
   mutate(gene_name = str_replace(gene_name, "Bma-", ""))
+
+#add adjusted p-value from DE analysis above
+padj <- res.df %>% select(gene_id,padj)
+gene_list <- left_join(gene_list, padj, by="gene_id") %>%
+  mutate(siglevel = ifelse(padj < 0.001, '***',
+                            ifelse(padj < 0.01, '**',
+                              ifelse(padj < 0.05, '*',''))))
 
 
 ##########################################
@@ -502,6 +519,27 @@ heatmap_ann2 <- ggplot(counts) +
   ) 
 heatmap_ann2
 
+heatmap_sig <- ggplot(counts,aes(x = "p-value", y = gene_id)) +
+  geom_tile(fill = "white") +
+  scale_fill_manual(values=c("white"),na.value="white") +
+  scale_x_discrete(limits = c("p-value")) +
+  geom_text(aes(label=siglevel), size = 2.5) +
+  xlab("") + ylab("") + 
+  theme_zlab_white() +
+  guides(x=guide_axis(angle = 45)) +
+  theme(
+    plot.background = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(),
+    legend.title = element_blank(),
+    legend.position = "none",
+    plot.margin = unit(c(0, 0, 0, 0), "cm")
+  )
+heatmap_sig
+
 
 ##########################################
 ### Figure 1
@@ -514,17 +552,20 @@ theme_set(theme_cowplot(font_family = "Helvetica") +
 library(Cairo)
 Fig1b <- pca.ht
 Fig1c <- volcano.ht 
-Fig1d <- plot_grid(heatmap, NULL,heatmap_ann1, NULL, heatmap_ann2, nrow = 1, rel_widths = c(1.25,-0.05,0.25,-.05,0.52), axis = "tb", align = "h")
+Fig1d <- plot_grid(heatmap, NULL, heatmap_sig, NULL,heatmap_ann1, NULL, heatmap_ann2, nrow = 1, 
+                   rel_widths = c(1.25, -0.05, 0.15, 0 ,0.25,-.05,0.52), axis = "tb", align = "h")
 
 Fig1ab <- plot_grid(Fig1a,Fig1b, nrow =1, labels = c('A','B'), rel_widths = c(1.3,1))
 FigL <- plot_grid(Fig1ab, Fig1c, nrow =2, labels = c('','C'), rel_heights = c(0.6,1))
 
-Fig1 <- plot_grid(FigL, NULL, Fig1d, labels = c('','','D'), nrow = 1, rel_widths = c(0.9,0.01,1), scale = 0.99) +
+Fig1 <- plot_grid(FigL, NULL, Fig1d, labels = c('','','D'), nrow = 1, 
+                  rel_widths = c(0.9,0.01,1), scale = 0.99) +
   theme(plot.background = element_rect(fill = "white"))
 
 #Fig1
-ggsave("Fig1.pdf", Fig1, width = 14.5, height = 8.25, units = "in")
+#ggsave("Fig1.pdf", Fig1, width = 14.5, height = 8.25, units = "in")
 ggsave("Fig1.png", Fig1, width = 14.5, height = 8.25, units = "in")
+ggsave("Fig1.tiff", Fig1, width = 14.5, height = 8.25, units = "in")
 
 
 

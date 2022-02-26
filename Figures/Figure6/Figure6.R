@@ -7,7 +7,7 @@ library(DESeq2)
 library(hexbin)
 library(wesanderson)
 
-setwd("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure6")
+setwd("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure6")
 theme_zlab_white = function(base_size = 12, base_family = "Helvetica") {
   
   theme_bw(base_size = base_size, base_family = base_family) %+replace%
@@ -62,10 +62,9 @@ theme_zlab_white = function(base_size = 12, base_family = "Helvetica") {
 
 library(magick)
 library(pdftools)
-library(grConvert)
 library(grImport2)
 
-RNA.illustration <- image_read_pdf("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/LCM_Pharynx/Illustration_IntestinePharynx.pdf", density = 300)
+RNA.illustration <- image_read_pdf("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/LCM_Pharynx/Illustration_IntestinePharynx.pdf", density = 300)
 Fig6.ill <- ggdraw() + 
   draw_image(RNA.illustration, scale = 1) 
 
@@ -219,7 +218,7 @@ degs.int.list <- unique(degs.int$gene_id)
 ##########################################
 
 # Prep TM(+) gene list
-Bma.TM <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.TM.csv",
+Bma.TM <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.TM.csv",
                       header = FALSE, sep = ",") %>%
   dplyr::rename("protein_id" = V1, "gene_id" = V2, "gene_name" = V3, "TM_count" = V4) %>%
   distinct(gene_id, .keep_all=TRUE)
@@ -227,16 +226,16 @@ Bma.TM <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/
 # Join TM data and add columns for plotting
 res.df <- left_join(res.df,Bma.TM, by="gene_id")
 res.df <- res.df %>%
-  mutate(gene_name = str_replace(gene_name, "Bma-", "")) %>%
-  mutate(TM = ifelse(TM_count > 0,"yes","no"))
+  dplyr::mutate(gene_name = str_replace(gene_name, "Bma-", "")) %>%
+  dplyr::mutate(TM = ifelse(TM_count > 0,"yes","no"))
 
 # Join intestinal proteom data
-prot.int.t20 <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bm.int.proteome.t20.txt",
+prot.int.t20 <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bm.int.proteome.t20.txt",
                    header = FALSE, sep = ",")
 prot.int.t20 <- prot.int.t20$V1
 res.df <- res.df %>% mutate(prot.int.t20 = ifelse(gene_id %in% prot.int.t20, "yes", "no"))
 
-prot.int.only <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bm.int.proteome.only.txt",
+prot.int.only <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bm.int.proteome.only.txt",
                          header = FALSE, sep = ",")
 prot.int.only <- prot.int.only$V1
 res.df <- res.df %>% mutate(prot.int.only = ifelse(gene_id %in% prot.int.only, "yes", "no"))

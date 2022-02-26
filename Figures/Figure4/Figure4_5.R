@@ -14,7 +14,7 @@ library(ggdendro)
 library(ggtree)
 library(treeio)
 
-setwd("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure4")
+setwd("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure4")
 theme_zlab_white = function(base_size = 12, base_family = "Helvetica") {
   
   theme_bw(base_size = base_size, base_family = base_family) %+replace%
@@ -74,10 +74,10 @@ theme_zlab_white = function(base_size = 12, base_family = "Helvetica") {
 
 library(magick)
 library(pdftools)
-library(grConvert)
+#library(grConvert)
 library(grImport2)
 
-RNA.illustration <- image_read_pdf("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/RNA_Tomography/Illustration_RNAt.pdf", density = 600)
+RNA.illustration <- image_read_pdf("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/RNA_Tomography/Illustration_RNAt.pdf", density = 600)
 Fig4.ill <- ggdraw() + 
   draw_image(RNA.illustration, scale = 1) 
 
@@ -361,7 +361,6 @@ qc.r1
 # create Fig4b (R1 heatmap and qc) - fix plot.margin (top right bottom left)
 Fig4.r1.bottom <- plot_grid(heatmap.r1,qc.r1, nrow = 1, labels = c('',''), align = "h", rel_widths = c(2,0.12), scale = 1) 
 Fig4.r1 <- plot_grid(dend + theme(plot.margin = unit(c(0.25, 0.6, -1.05, 2.5), "cm")), Fig4.r1.bottom,ncol = 1, labels = c('',''), rel_heights = c(0.075,1), scale = 1) 
-#ggsave("Fig4.r1.pdf", Fig4.r1, width =14, height = 7, units = "in")
 
 
 ############
@@ -412,7 +411,7 @@ cluster <- as.data.frame(cluster) %>%
 counts <- left_join(counts, cluster, by = "gene_id")
 
 # add gene metadata
-Bma.TM <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.TM.csv",
+Bma.TM <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.TM.csv",
                    header = FALSE, sep = ",") %>%
   dplyr::rename("protein_id" = V1, "gene_id" = V2, "gene_name" = V3, "TM_count" = V4) %>% select(-TM_count) %>%
   distinct(gene_id, .keep_all=TRUE) %>%
@@ -470,11 +469,18 @@ Fig4.grplots <- ggplot(counts, aes(sample, expression)) +
     legend.position = "none"
   ) +
   facet_wrap(cluster ~ ., ncol = 4, scales ="free", labeller = labeller(cluster), strip.position = "left") 
-ggsave("Fig4.grplots.pdf", Fig4.grplots, width = 12, height = 4, units = "in")
 
-#save supplemental file of clustered genes (cluster df)
+
+# integrate gene names and save supplemental file of clustered genes (cluster df)
+Bma.id <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.Proteins.csv",
+                   header = FALSE, sep = ",") %>% 
+  dplyr::rename("protein_id" = V1, "gene_id" = V2, "gene_name" = V3) %>%
+  group_by(gene_id, gene_name) %>%
+  distinct(gene_id, .keep_all = TRUE)
 counts <- counts %>% select(gene_id, cluster) %>%
   distinct(gene_id, .keep_all = TRUE)
+
+counts <- left_join(counts,Bma.id,by="gene_id")
 write.csv(counts,"RNAtomography_clustering.csv", row.names = FALSE)
 
 
@@ -687,10 +693,10 @@ ggsave("Fig4.pdf", Fig4, width = 16, height = 15, units = "in")
 
 library(magick)
 library(pdftools)
-library(grConvert)
+#library(grConvert)
 library(grImport2)
 
-RNA.illustration <- image_read_pdf("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/RNA_Tomography/Illustration_RNAt_horizontal.pdf", density = 600)
+RNA.illustration <- image_read_pdf("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/RNA_Tomography/Illustration_RNAt_horizontal.pdf", density = 600)
 Fig5.ill <- ggdraw() + 
   draw_image(RNA.illustration, scale = 1) 
 
@@ -711,14 +717,14 @@ counts$sample <- as.integer(counts$sample)
 
 #update cryosection indexing based on qc (R1 = 12, R2 = 9, R3 = 8)
 counts <- counts %>%
-  mutate(sample = ifelse(rep == "R1", sample - 11, ifelse(rep =="R2", sample - 8, ifelse(rep == "R3", sample - 7, sample))))
+  dplyr::mutate(sample = ifelse(rep == "R1", sample - 11, ifelse(rep =="R2", sample - 8, ifelse(rep == "R3", sample - 7, sample))))
 
 #sample range
 min_sample <- as.integer(min(counts$sample))
 max_sample <- as.integer(max(counts$sample))
 
 # load in and join gene metadata
-Bma.TM <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.TM.csv",
+Bma.TM <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.TM.csv",
                    header = FALSE, sep = ",") %>%
   dplyr::rename("protein_id" = V1, "gene_id" = V2, "gene_name" = V3, "TM_count" = V4) %>% select(-TM_count) %>%
   distinct(gene_id, .keep_all=TRUE) %>%
@@ -795,7 +801,7 @@ counts <- counts %>%
   mutate(sample = ifelse(rep == "R1", sample - 11, ifelse(rep =="R2", sample - 8, ifelse(rep == "R3", sample - 7, sample))))
 
 # load in and join gene metadata
-Bma.TM <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.TM.csv",
+Bma.TM <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.TM.csv",
                    header = FALSE, sep = ",") %>%
   dplyr::rename("protein_id" = V1, "gene_id" = V2, "gene_name" = V3, "TM_count" = V4) %>% select(-TM_count) %>%
   distinct(gene_id, .keep_all=TRUE) %>%
@@ -811,9 +817,9 @@ counts <- left_join(counts, Bma.TM, by = "gene_id") %>%
   dplyr::filter(!is.na(protein_id))
 
 # gpcrs, trps, lgics and merge with counts
-drugtargets.1 <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Drug_Targets.csv",
+drugtargets.1 <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Drug_Targets.csv",
                          header = TRUE, sep = ",") %>% filter(type %in% c("GPCR","TRP")) %>% select(gene_id, type,subtype)
-drugtargets.2 <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bm.LGICs.txt",
+drugtargets.2 <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bm.LGICs.txt",
                           header = FALSE, sep = ",") %>% dplyr::rename(protein_id = "V1") %>% mutate(type = "LGIC")
 counts.dr <- left_join(counts, drugtargets.1, by="gene_id")
 counts.dr <- left_join(counts.dr, drugtargets.2, by="protein_id")
@@ -982,8 +988,8 @@ counts <- counts %>%
 ########################
 
 ### CORRELATION MATRIX
-#read lgics in from tree
-lgics <- x %>% filter(species == "Bma")
+#read lgics in from tree (first run code further down to get d1)
+lgics <- d1 %>% dplyr::filter(species == "Bma")
 lgic.list <- unique(lgics$gene_id)
 
 # read in gene counts, filter for robust slices and genes of interest, prep for matrix conversion
@@ -1013,7 +1019,7 @@ counts.t <- t(counts)
 cor <- rcorr(counts.t, type = c("pearson","spearman"))
 cor.r <- as.data.frame(cor$r) %>%
   rownames_to_column(var = "gene_id") %>%
-  pivot_longer(cols=2:51, names_to = "gene_id_2", values_to = "corr") %>%
+  pivot_longer(cols=2:52, names_to = "gene_id_2", values_to = "corr") %>%
   transmute(from = pmin(gene_id, gene_id_2), to = pmax(gene_id, gene_id_2), corr) %>%
   distinct()
 
@@ -1021,8 +1027,9 @@ cor.r <- as.data.frame(cor$r) %>%
 saveRDS(cor.r, file = "data/lgic.cor.rds")
 
 # don't run above, just load the RDS
-setwd("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure4")
+setwd("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure4")
 cor.r <- readRDS(file = "data/lgic.cor.rds")
+
 
 ### TREE
 # reinstalling all of the packages from the source code
@@ -1038,14 +1045,14 @@ library(dplyr)
 library(stringr)
 
 # load in Bma and Cel ids
-Bma.id <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.Proteins.csv",
+Bma.id <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Bma.Proteins.csv",
                       header = FALSE, sep = ",") %>% 
   rename("protein_id" = V1, "gene_id" = V2, "gene_name" = V3) %>%
   group_by(gene_id, gene_name) %>%
   distinct(gene_id, .keep_all = TRUE)
 Bma.protein.list <- unique(Bma.id$protein_id)
 
-Cel.id <- read.csv("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Cel.Proteins.csv",
+Cel.id <- read.csv("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/RNAseq/Gene_Lists/Cel.Proteins.csv",
                    header = FALSE, sep = ",") %>% 
   rename("protein_id" = V1, "gene_id" = V2, "gene_name" = V3) %>%
   group_by(gene_id,gene_name) %>%
@@ -1073,7 +1080,6 @@ d1 <- as_tibble(lgic.phylo) %>%
            is.na(gene_name) == TRUE ~ protein_id,
            TRUE ~ gene_name
          ))
-
 
 #reroot
 lgic.phylo <- ape::root(lgic.phylo, node = 214)
@@ -1133,8 +1139,7 @@ glc.phylo@data$SH_aLRT <- 0.1
     scale_fill_manual(values = c('black', 'white')) +
     theme(legend.position = "empty") +
     NULL)
-
-save_plot('glc_tree.pdf', glc.tree, base_height = 12)
+#save_plot('glc_tree.pdf', glc.tree, base_height = 12)
 
 # subset tree (acc)
 acc.phylo <- tree_subset(lgic.phylo, node = 191, levels_back = 0) 
@@ -1175,8 +1180,7 @@ acc.phylo@phylo$tip.label <- acc.tibble$tiplab
     scale_fill_manual(values = c('black', 'white')) +
     theme(legend.position = "empty") +
     NULL)
-
-save_plot('acc_tree.pdf', plot_grid(acc.tree), base_height = 12)
+#save_plot('acc_tree.pdf', plot_grid(acc.tree), base_height = 12)
 
 # subset tree (nachr)
 
@@ -1240,28 +1244,33 @@ nachr.phylo@phylo$tip.label <- nachr.tibble$tiplab
     scale_fill_manual(values = c('black', 'white')) +
     theme(legend.position = "empty") +
     NULL)
-
-save_plot('nachr_tree.pdf', plot_grid(nachr.tree), base_height = 3)
+#save_plot('nachr_tree.pdf', plot_grid(nachr.tree), base_height = 3)
 
 fig5c <- plot_grid(acc.tree, glc.tree, nachr.tree, nrow = 3)
-
-ggsave('Fig5C.pdf', fig5c, height = 9.5, width = 3)
-
+#ggsave('Fig5C.pdf', fig5c, height = 9.5, width = 3)
 
 # supp fig 2
+#first make correlations symmetric (all one-way)
+cor_tree.rev <- cor_tree
+colnames(cor_tree.rev) <- c("to","from","corr")
+cor_tree.rev <- cor_tree.rev %>% select("from","to","corr")
+cor_tree <- rbind(cor_tree,cor_tree.rev)
+cor_tree <- cor_tree %>%
+  distinct(from,to,corr)
+
 (all_corr <- cor_tree %>% 
     filter(corr > 0) %>% 
     mutate(class = case_when(
-      from %in% acc.tibble$gene_name & to %in% acc.tibble$gene_name ~ 'ACC',
-      from %in% glc.tibble$gene_name & to %in% glc.tibble$gene_name ~ 'GLC',
-      from %in% nachr.tibble$gene_name & to %in% nachr.tibble$gene_name ~ 'N-AchR',
+      from %in% acc.tibble$tiplab | to %in% acc.tibble$tiplab ~ 'ACC',
+      from %in% glc.tibble$tiplab | to %in% glc.tibble$tiplab ~ 'GLC',
+      from %in% nachr.tibble$tiplab | to %in% nachr.tibble$tiplab ~ 'N-AchR',
     )) %>% 
-    # filter(!is.na(class)) %>% 
+    #filter(!is.na(class)) %>% 
     ggplot() +
     geom_tile(aes(x = from, y = to, fill = corr)) +
     scale_fill_viridis() +
     labs(fill = 'Correlation') +
-    # facet_wrap(facets = vars(class)) +
+    #facet_wrap(facets = vars(class)) +
     theme(
       axis.title = element_blank(),
       axis.text = element_text(face = 'italic'),
@@ -1272,7 +1281,73 @@ ggsave('Fig5C.pdf', fig5c, height = 9.5, width = 3)
     ) +
     NULL)
 
-save_plot('SupplementaryFigure2_correlation.pdf', all_corr, base_width = 9.5, base_height = 9.5)
+(acc_corr <- cor_tree %>% 
+    filter(corr > 0) %>% 
+    mutate(class = case_when(
+      from %in% acc.tibble$tiplab & to %in% acc.tibble$tiplab ~ 'ACC',
+    )) %>% 
+    filter(!is.na(class)) %>% 
+    ggplot() +
+    geom_tile(aes(x = from, y = to, fill = corr)) +
+    scale_fill_viridis() +
+    labs(fill = 'Correlation') +
+    facet_wrap(facets = vars(class)) +
+    theme(
+      axis.title = element_blank(),
+      axis.text = element_text(face = 'italic'),
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      panel.background = element_rect(fill = 'black'),
+      panel.grid = element_blank(),
+      legend.position = 'none'
+    ) +
+    NULL)
+
+
+(glc_corr <- cor_tree %>% 
+    filter(corr > 0) %>% 
+    mutate(class = case_when(
+      from %in% glc.tibble$tiplab & to %in% glc.tibble$tiplab ~ 'GLC',
+    )) %>% 
+    filter(!is.na(class)) %>% 
+    ggplot() +
+    geom_tile(aes(x = from, y = to, fill = corr)) +
+    scale_fill_viridis() +
+    labs(fill = 'Correlation') +
+    facet_wrap(facets = vars(class)) +
+    theme(
+      axis.title = element_blank(),
+      axis.text = element_text(face = 'italic'),
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      panel.background = element_rect(fill = 'black'),
+      panel.grid = element_blank(),
+      legend.position = 'none'
+    ) +
+    NULL)
+
+(nachr_corr <- cor_tree %>% 
+    filter(corr > 0) %>% 
+    mutate(class = case_when(
+      from %in% nachr.tibble$tiplab & to %in% nachr.tibble$tiplab ~ 'N-AchR',
+    )) %>% 
+    filter(!is.na(class)) %>% 
+    ggplot() +
+    geom_tile(aes(x = from, y = to, fill = corr)) +
+    scale_fill_viridis() +
+    labs(fill = 'Correlation') +
+    facet_wrap(facets = vars(class)) +
+    theme(
+      axis.title = element_blank(),
+      axis.text = element_text(face = 'italic'),
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      panel.background = element_rect(fill = 'black'),
+      panel.grid = element_blank(),
+      legend.position = 'none'
+    ) +
+    NULL)
+
+subunit_corr_split <- plot_grid(acc_corr, glc_corr, nachr_corr, nrow = 1) 
+subunit_corr <- plot_grid(all_corr, subunit_corr_split, nrow = 2,rel_heights = c(1,0.3), scale = 0.98)
+save_plot('SupplementaryFigure2_correlation.pdf', subunit_corr, base_width = 10, base_height = 14)
 
 
 #########################

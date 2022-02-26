@@ -1,9 +1,10 @@
 library(tidyverse)
 library(dplyr)
 library(cowplot)
+#devtools::install_github("johannesbjork/LaCroixColoR")
 library(LaCroixColoR)
 
-setwd("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure2")
+setwd("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure1")
 
 theme_zlab <- function(base_size = 16, base_family = "helvetica") {
   (ggthemes::theme_foundation(base_size = base_size, base_family = base_family) +
@@ -85,7 +86,7 @@ theme_zlab_white = function(base_size = 12, base_family = "Helvetica") {
 ## FIG 2A Clade III Comparative Anatomy 
 ############
 
-setwd("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Microscopy/")
+setwd("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Microscopy/")
 
 anat <- read.csv("Comparative_Anatomy.csv", header = TRUE, sep = ",")
 anat$Stage <- factor(anat$Stage, levels = c("mf","L2/3","AF"), 
@@ -102,20 +103,26 @@ anat$Order <- factor(anat$Order, levels = c("Spirurida","Ascaridida","Oxyurida")
 anat.plot <- ggplot(data=anat, aes(y=Species)) +
   theme_zlab_white() +
   theme(axis.text.y = element_text(face = "italic", hjust =1),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
+        #axis.text.x = element_blank(),
+        #axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
         legend.title = element_blank(),
         panel.spacing = unit(1, "lines"),
         panel.border = element_rect(color = "black", fill = NA, size = 0.75)) +
   scale_color_manual(values=lacroix_palette("PassionFruit",type = "continuous", n=6)) +
-  geom_point(data = filter(anat, Stage %in% c("Adult Female")),aes(x = (Start+End)/2, y = Species, color = Feature), size = 5, alpha = 0.75) +
-  geom_point(data = filter(anat, Stage %in% c("mf/L1","L2/L3")),aes(x = 500*(Start), y = Species, color = Feature), size = 4.5, alpha = 0.75, show.legend = FALSE) +
-  #geom_segment(data = filter(anat, Stage %in% c("mf/L1","L2/L3")),
-  #             aes(x = Start*400, y = Species, xend = End*400, yend = Species,color = Feature), size = 5, alpha = 0.75, show.legend = FALSE) +
-  ylab("") + xlab("Anterior (L) to Posterior (R)") +
+  scale_x_continuous(breaks=c(0,2,4,6,8,10),labels=c("A",2,4,6,8,10), expand = expansion(mult=0.1, add = c(0.05,0.05))) +
+  geom_point(data = filter(anat, Stage %in% c("Adult Female")),
+             aes(x = (Start+End)/2000, y = Species, color = Feature), size = 5, alpha = 0.5) +
+  geom_point(data = filter(anat, Stage %in% c("mf/L1","L2/L3")),
+             aes(x = (Start)/3, y = Species, color = Feature), size = 2.5, alpha = 0.75, show.legend = FALSE) +
+  #geom_segment(data = filter(anat, Stage %in% c("Adult Female")),
+   #            aes(x = Start/1000, y = Species, xend = End/1000, yend = Species,color = Feature), size = 1, alpha = 0.5, show.legend = FALSE) +
+  ylab("") +  xlab("                                           Distance from anterior (mm)") +
   facet_grid(Order ~ Stage,  scales = "free", space="free")
 anat.plot
+
+
+
 
 
 ############
@@ -127,7 +134,7 @@ library(pdftools)
 library(grConvert)
 library(grImport2)
 
-LS.pulse <- image_read_pdf("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Microscopy/Lightsheet/LightSheet_Pulse2.pdf", density = 600)
+LS.pulse <- image_read_pdf("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Microscopy/Lightsheet/LightSheet_Pulse2.pdf", density = 600)
 Fig2b <- ggdraw() + 
   draw_image(LS.pulse, scale = 1) 
 
@@ -136,11 +143,11 @@ Fig2b <- ggdraw() +
 ## FIG 2C/D SBF-SEM / TEM
 ############
 
-SBFSEM <- image_read_pdf("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Microscopy/Bmalayi_AF_SBFSEM/Figure2C_SBF_SEM.pdf", density = 600)
+SBFSEM <- image_read_pdf("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Microscopy/Bmalayi_AF_SBFSEM/Figure2C_SBF_SEM.pdf", density = 600)
 Fig2c <- ggdraw() + 
   draw_image(SBFSEM, scale = 1) 
 
-TEM <- image_read_pdf("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Microscopy/Bmalayi_AF_SBFSEM/Figure2D_TEM.pdf", density = 600)
+TEM <- image_read_pdf("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Microscopy/Bmalayi_AF_SBFSEM/Figure2D_TEM.pdf", density = 600)
 Fig2d <- ggdraw() + 
   draw_image(TEM, scale = 1) 
 
@@ -149,7 +156,7 @@ Fig2d <- ggdraw() +
 ##########################################
 ### Figure 2
 ##########################################
-setwd("~/Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure2/")
+setwd("~/Library/CloudStorage/Box-Box/ZamanianLab/Data/Airs_Experiments/Bm_spatial_trans-ms/Figures/Figure2/")
 
 Fig2a <- anat.plot
 
@@ -159,11 +166,11 @@ theme_set(theme_cowplot(font_family = "Helvetica") +
             theme(text = element_text(colour = "white")))
 Fig2bot <- plot_grid(Fig2c, NULL, Fig2d, nrow = 1, labels = c('C','','D'), hjust = -2.5, label_x = 0.01, rel_widths = c(0.69,0.01,1), scale = 1)
 
-Fig2 <- plot_grid(Fig2top, Fig2bot, nrow = 2, labels = c('',''), rel_heights = c(1,1.1), scale = 0.99)
+Fig2 <- plot_grid(Fig2top, Fig2bot, nrow = 2, labels = c('',''), rel_heights = c(1.05,1.1), scale = 0.99)
 
 theme_set(theme_cowplot(font_family = "Helvetica") + 
             theme(text = element_text(colour = "black")))
-ggsave("Figure2.pdf", Fig2, width =12, height = 13.5, units = "in")
+ggsave("Figure2.pdf", Fig2, width =12, height = 13.6, units = "in")
 
 
 
